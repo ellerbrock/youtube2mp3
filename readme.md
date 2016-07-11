@@ -3,6 +3,8 @@ youtube2mp3 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.s
 
 Simple Shell Script to download Youtube Videos and convert them on the fly to mp3 files.
 
+![screencast](https://github.frapsoft.com/screenshots/youtube2mp3.gif)
+
 Install Dependencies
 --------------------
 
