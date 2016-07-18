@@ -20,9 +20,8 @@ With the dependencies installed your ready to go.
 
 Download the Script [ydl.sh](https://raw.githubusercontent.com/ellerbrock/youtube2mp3/master/ydl.sh) and make it executable `chmod u+x ydl.sh`
 
-> Run the Script via: `./ydl.sh url`
-
-> url can be a youtube link or even a playlist
+> Run the Script via: `./ydl.sh url`<br>
+> url can be a youtube link, playlist, channel ...
 
 By default the mp3 files are stored in the same folder where the script was executed.
 
@@ -63,7 +62,7 @@ Thats it happy downloading!
 
 #!/usr/bin/env bash
 
-# install dependencies function
+# install dependencies (manual)
 install_ydl() {
   brew update
   brew install youtube-dl ffmpeg libav
@@ -81,11 +80,12 @@ youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 --ignore-errors 
 # check if on osx
 if [ `uname` == "Darwin" ] ; then
   # desctop notification
-  osascript -e 'display notification "All Downloads done." with title "Youtube Downloader"'
+  osascript -e 'display notification "All Downloads finished." with title "Youtube Downloader"'
 
-  # open folder with downloads
-  open .
+  # open current download folder
+  # open .
 fi
+
 
 exit 0
 ```
