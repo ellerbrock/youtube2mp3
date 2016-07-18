@@ -1,3 +1,10 @@
-init.sh
+*~
+*.log
+*.sh
+*.pid
+*.org.md
+.tscache
 template.md
+/local
 /templates
+/typings
