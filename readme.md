@@ -12,9 +12,9 @@ or
 
 **from Source**
 
-- [youtube-dl](https://github.com/rg3/youtube-dl)
-- [ffmpeg](https://github.com/FFmpeg/FFmpeg)
-- [libav](https://github.com/libav/libav)
+-   [youtube-dl](https://github.com/rg3/youtube-dl)
+-   [ffmpeg](https://github.com/FFmpeg/FFmpeg)
+-   [libav](https://github.com/libav/libav)
 
 With the dependencies installed your ready to go.
 
@@ -33,7 +33,7 @@ Thats it happy downloading!
 
 ### Source
 
-```
+```bash
 #!/usr/bin/env bash
 #
 #   /$$$$$$$$                                                /$$$$$$   /$$
@@ -50,44 +50,33 @@ Thats it happy downloading!
 #
 #   Developer     Maik Ellerbrock
 #   GitHub        https://github.com/ellerbrock
-#
-#   Company       Frapsoft Web Agency
-#
 #   Twitter       https://twitter.com/frapsoft
 #   Facebook      https://facebook.com/frapsoft
-#   Homepage      https://frapsoft.com
 #
-#   Version       1.0.1
+#   Version       1.1.0
+#
+#   Dependencies: brew install youtube-dl ffmpeg libav
 #
 
-#!/usr/bin/env bash
+# CONFIGURATION
+BASEDIR="/Volumes/Media/Music"
+MP3DIR="$BASEDIR/youtube/"
+LOGFILE="$BASEDIR/youtube.log"
+DATE=`date +%Y-%m-%d`
 
-# install dependencies (manual)
-install_ydl() {
-  brew update
-  brew install youtube-dl ffmpeg libav
-}
-
-# check if parameter is given
-if [ ! $@ ]; then
-  echo "Usage: ydl.sh youtube-url"
-  exit 1;
+if [ ! "$1" ]; then
+  echo "usage: ydl.sh youtube-url"
+  exit 1
 fi
 
-# download to current folder and convert to mp3
+cd $MP3DIR
+echo -e "$DATE \t $1" >> $LOGFILE
 youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 --ignore-errors $@
 
-# check if on osx
 if [ `uname` == "Darwin" ] ; then
-  # desctop notification
-  osascript -e 'display notification "All Downloads finished." with title "Youtube Downloader"'
-
-  # open current download folder
-  # open .
+  osascript -e 'display notification "All Downloads done." with title "Youtube Downloader"'
+  open .
 fi
-
-
-exit 0
 ```
 
 ### Contact / Social Media
