@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>youtube 2 mp3 by ellerbrock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">youtube 2 mp3</h1>
+      <h2 class="project-tagline">yet another youtube downloader</h2>
+      <a href="https://github.com/ellerbrock/youtube2mp3" class="btn">View on GitHub</a>
+      <a href="https://github.com/ellerbrock/youtube2mp3/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ellerbrock/youtube2mp3/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="youtube2mp3--" class="anchor" href="#youtube2mp3--" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>youtube2mp3 <a href="https://github.com/ellerbrock/open-source-badge/"><img src="https://badges.frapsoft.com/os/v1/open-source.svg?v=102" alt="Open Source Love"></a> <a href="https://gitter.im/frapsoft/frapsoft/"><img src="https://badges.gitter.im/frapsoft/frapsoft.svg" alt="Gitter Chat"></a>
+</h1>
+
+<p>Simple Shell Script to download Youtube Videos and convert them on the fly to mp3 files.</p>
+
+<h2>
+<a id="install-dependencies" class="anchor" href="#install-dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install Dependencies</h2>
+
+<p><strong>via Homebrew</strong></p>
+
+<p><code>brew install youtube-dl ffmpeg libav</code></p>
+
+<p>or</p>
+
+<p><strong>from Source</strong></p>
+
+<ul>
+<li>  <a href="https://github.com/rg3/youtube-dl">youtube-dl</a>
+</li>
+<li>  <a href="https://github.com/FFmpeg/FFmpeg">ffmpeg</a>
+</li>
+<li>  <a href="https://github.com/libav/libav">libav</a>
+</li>
+</ul>
+
+<p>With the dependencies installed your ready to go.</p>
+
+<p>Download the Script <a href="https://raw.githubusercontent.com/ellerbrock/youtube2mp3/master/ydl.sh">ydl.sh</a> and make it executable <code>chmod u+x ydl.sh</code></p>
+
+<blockquote>
+<p>Run the Script via: <code>./ydl.sh url</code><br>
+url can be a youtube link, playlist, channel ...</p>
+</blockquote>
+
+<p>By default the mp3 files are stored in the same folder where the script was executed.</p>
+
+<p>You can create an alias to run the script from everywhere: <code>alias ydl="/src/to/file/ydl.sh"</code></p>
+
+<p>Thats it happy downloading!</p>
+
+<p><img src="http://i.giphy.com/l0LIYv9tJFIVHxF5u.gif" alt="unicorn love"></p>
+
+<h3>
+<a id="source" class="anchor" href="#source" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Source</h3>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c">#!/usr/bin/env bash</span>
+<span class="pl-c">#</span>
+<span class="pl-c">#   /$$$$$$$$                                                /$$$$$$   /$$</span>
+<span class="pl-c">#  | $$_____/                                               /$$__  $$ | $$</span>
+<span class="pl-c">#  | $$     /$$$$$$  /$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$ | $$  \__//$$$$$$</span>
+<span class="pl-c">#  | $$$$$ /$$__  $$|____  $$ /$$__  $$ /$$_____/ /$$__  $$| $$$$   |_  $$_/</span>
+<span class="pl-c">#  | $$__/| $$  \__/ /$$$$$$$| $$  \ $$|  $$$$$$ | $$  \ $$| $$_/     | $$</span>
+<span class="pl-c">#  | $$   | $$      /$$__  $$| $$  | $$ \____  $$| $$  | $$| $$       | $$ /$$</span>
+<span class="pl-c">#  | $$   | $$     |  $$$$$$$| $$$$$$$/ /$$$$$$$/|  $$$$$$/| $$       |  $$$$/</span>
+<span class="pl-c">#  |__/   |__/      \_______/| $$____/ |_______/  \______/ |__/        \___/</span>
+<span class="pl-c">#                            | $$</span>
+<span class="pl-c">#                            | $$</span>
+<span class="pl-c">#                            |__/</span>
+<span class="pl-c">#</span>
+<span class="pl-c">#   Developer     Maik Ellerbrock</span>
+<span class="pl-c">#   GitHub        https://github.com/ellerbrock</span>
+<span class="pl-c">#   Twitter       https://twitter.com/frapsoft</span>
+<span class="pl-c">#   Facebook      https://facebook.com/frapsoft</span>
+<span class="pl-c">#</span>
+<span class="pl-c">#   Version       1.1.0</span>
+<span class="pl-c">#</span>
+<span class="pl-c">#   Dependencies: brew install youtube-dl ffmpeg libav</span>
+<span class="pl-c">#</span>
+
+<span class="pl-c"># CONFIGURATION</span>
+BASEDIR=<span class="pl-s"><span class="pl-pds">"</span>/Volumes/Media/Music<span class="pl-pds">"</span></span>
+MP3DIR=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BASEDIR</span>/youtube/<span class="pl-pds">"</span></span>
+LOGFILE=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$BASEDIR</span>/youtube.log<span class="pl-pds">"</span></span>
+DATE=<span class="pl-s"><span class="pl-pds">`</span>date +%Y-%m-%d<span class="pl-pds">`</span></span>
+
+<span class="pl-k">if</span> [ <span class="pl-k">!</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$1</span><span class="pl-pds">"</span></span> ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>usage: ydl.sh youtube-url<span class="pl-pds">"</span></span>
+  <span class="pl-c1">exit</span> 1
+<span class="pl-k">fi</span>
+
+<span class="pl-c1">cd</span> <span class="pl-smi">$MP3DIR</span>
+<span class="pl-c1">echo</span> -e <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DATE</span> \t <span class="pl-smi">$1</span><span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> <span class="pl-smi">$LOGFILE</span>
+youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 --ignore-errors <span class="pl-smi">$@</span>
+
+<span class="pl-k">if</span> [ <span class="pl-s"><span class="pl-pds">`</span>uname<span class="pl-pds">`</span></span> <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">"</span>Darwin<span class="pl-pds">"</span></span> ] <span class="pl-k">;</span> <span class="pl-k">then</span>
+  osascript -e <span class="pl-s"><span class="pl-pds">'</span>display notification "All Downloads done." with title "Youtube Downloader"<span class="pl-pds">'</span></span>
+  open <span class="pl-c1">.</span>
+<span class="pl-k">fi</span></pre></div>
+
+<h3>
+<a id="contact--social-media" class="anchor" href="#contact--social-media" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contact / Social Media</h3>
+
+<p><em>Get the latest News about Web Development, Open Source, Tooling, Server &amp; Security</em></p>
+
+<p><a href="https://twitter.com/frapsoft/"><img src="https://github.frapsoft.com/social/twitter.png" alt="Twitter"></a>
+<a href="https://www.facebook.com/frapsoft/"><img src="https://github.frapsoft.com/social/facebook.png" alt="Facebook"></a>
+<a href="https://plus.google.com/116540931335841862774"><img src="https://github.frapsoft.com/social/google-plus.png" alt="Google+"></a>
+<a href="https://gitter.im/frapsoft/frapsoft/"><img src="https://github.frapsoft.com/social/gitter.png" alt="Gitter"></a>
+<a href="https://github.com/ellerbrock/"><img src="https://github.frapsoft.com/social/github.png" alt="Github"></a></p>
+
+<h3>
+<a id="development-by" class="anchor" href="#development-by" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development by</h3>
+
+<p>Developer / Author: <a href="https://github.com/ellerbrock/">Maik Ellerbrock</a><br>
+Company: <a href="https://github.com/frapsoft/">Frapsoft</a></p>
+
+<h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h3>
+
+<p>Copyright (c) 2016 <a href="https://github.com/ellerbrock/">Maik Ellerbrock</a>  </p>
+
+<p><a href="https://opensource.org/licenses/mit-license.php"><img src="https://badges.frapsoft.com/os/mit/mit-125x28.png?v=102" alt="MIT Licence"></a>  </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/ellerbrock/youtube2mp3">youtube 2 mp3</a> is maintained by <a href="https://github.com/ellerbrock">ellerbrock</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
